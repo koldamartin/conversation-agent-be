@@ -1,19 +1,39 @@
 FROM python:3.12-alpine3.20 AS builder
-RUN apk add --no-cache build-base
-RUN pip install poetry==1.8.3
+
+# Combine RUN commands and clean up in the same layer
+RUN apk add --no-cache build-base \
+    && pip install --no-cache-dir poetry==1.8.3 \
+    && rm -rf /root/.cache/pip
+
+# Set environment variables
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
+
 WORKDIR /app
+
+# Copy only necessary files for dependency installation
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-interaction --no-ansi
+
+# Install dependencies and remove cache in the same layer
+RUN poetry install --no-dev --no-interaction --no-ansi \
+    && rm -rf $POETRY_CACHE_DIR
 
 FROM python:3.12-alpine3.20 AS runtime
+
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH" \
     PYTHONPATH="/app:$PYTHONPATH"
+
 WORKDIR /app
+
+# Copy only the virtual environment from the builder stage
 COPY --from=builder /app/.venv /app/.venv
-COPY . .
+
+# Copy only necessary files for the application
+COPY conversation_agent ./conversation_agent
+COPY .env .
+
 CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
+
 EXPOSE 5000
