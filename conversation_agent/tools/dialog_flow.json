@@ -1,0 +1,107 @@
+[
+  {
+    "id": 0,
+    "name": "I_am_fine",
+    "description": "You are asked: How are you?",
+    "response": "I am fine. Thank you.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 1,
+    "name": "Dirty_talk",
+    "description": "You are insulted or the user talks dirty.",
+    "response": "Do not talk to me like that. Show some respect!",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 2,
+    "name": "Mobile_Application_pair",
+    "description": "User wants to pair his mobile application with his account.",
+    "response": "Zkoušeli jste už aplikaci spárovat obličejem?",
+    "end_flow": "No"
+  },
+  {
+    "id": 3,
+    "name": "Tried_pairing_app",
+    "description": "Wants to pair mobile app, tried pairing his mobile app",
+    "response": "Dokážete se přihlásit do svého internetového bankovnictví?",
+    "end_flow": "No"
+  },
+  {
+    "id": 4,
+    "name": "Did_not_tried_pairing_app",
+    "description": "Wants to pair mobile app, did not try pairing his app",
+    "response": "Mobilní bankovnictví si propojíte rychle přímo v aplikaci. Podrobný návod i s obrázky vám pošlu zprávou.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 5,
+    "name": "Can_log_into_banking",
+    "description": "Wants to pair mobile app, already tried it and can log in to his internet banking account",
+    "response": "Aplikaci si můžete spárovat i přes své internetové bankovnictví. Pak už jen do aplikace naskenujete QR kód a je to. Podrobný návod vám pošlu zprávou.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 6,
+    "name": "Cannot_log_into_banking",
+    "description": "Wants to pair mobile app, already tried it and cannot log in to his internet banking account",
+    "response": "Přepojím vás nyní na někoho kdo má spárování mobilní aplikace pod palcem.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 7,
+    "name": "Want_to_log_internet_banking",
+    "description": "User wants to log into his internet banking, using a web browser or a PC. Not a mobile app.",
+    "response": "S přihlášením do bankovnictví vám ráda poradím, nejdříve mi ale řekněte: Máte k dispozici aplikaci My Air?",
+    "end_flow": "No"
+  },
+  {
+    "id": 8,
+    "name": "Have_MyAir_app",
+    "description": "User wants to log into his internet banking and he has access to his mobile MyAir app",
+    "response": "Do IB se nejjednodušeji přihlásíte cvaknutím QR kódu. Návod i s video ukázkou vám pošlu zprávou.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 9,
+    "name": "Doesnt_have_MyAir_app",
+    "description": "User wants to log into his internet banking and he hasn't got access to his mobile MyAir app",
+    "response": "Přepojím vás nyní na někoho kdo má spárování přes internet pod palcem.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 10,
+    "name": "Want_to_log_into_banking_general",
+    "description": "When user wants to log into his account. But did not specify if he wants to use mobile app or browser/PC",
+    "response": "Potřebujete se přihlásit do bankovnictví v aplikaci nebo na webových stránkách?",
+    "end_flow": "No"
+  },
+  {
+    "id": 11,
+    "name": "Anything_else",
+    "description": "In the previous question, user was given a choice. But he chose something completely different",
+    "response": "Přepojím vás nyní na někoho kdo má přihlašování a spárování pod palcem.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 12,
+    "name": "Log_into_mobile_app",
+    "description": "When user wants to log into his account using mobile app",
+    "response": "Pokud se vám do aplikace nedaří přihlásit, tak si můžete heslo přenastavit ťuknutím na tlačítko Zapomněli jste heslo. Podrobný návod vám pošlu zprávou.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 13,
+    "name": "Forgotten_name",
+    "description": "When user forgot his account credentials, like his user name or birth date.",
+    "response": "Uživatelské jméno si můžete zobrazit v mobilní aplikaci nebo si ho můžete nechat poslat na mail. Podrobný návod vám pošlu zprávou.",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 14,
+    "name": "Default_tool",
+    "description": "Use this tool when no other tool can be used.",
+    "response": "Teď jsem vám nerozumněla, zkuste se mě zeptat jinak.",
+    "end_flow": "Yes"
+  }
+]
