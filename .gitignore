@@ -1,3 +1,5 @@
 # Ignore a specific file
 .env
 other/
+__pycache__/
+.idea/
