@@ -32,10 +32,7 @@ COPY --from=builder /app/.venv /app/.venv
 
 # Copy only necessary files for the application
 COPY conversation_agent ./conversation_agent
-# Conditionally copy the .env file if it exists
-COPY --chown=root:root .env .env
 
-# CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
-CMD ["sh", "-c", "if [ -f .env ]; then export $(grep -v '^#' .env | xargs); fi && python conversation_agent/app.py run --host=0.0.0.0 --port=${PORT} --env-file=.env"]
+CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
 
 EXPOSE 5000
