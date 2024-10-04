@@ -33,6 +33,9 @@ COPY --from=builder /app/.venv /app/.venv
 # Copy only necessary files for the application
 COPY conversation_agent ./conversation_agent
 
-CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
+RUN pip install --no-cache-dir gunicorn
+
+# CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
+ENTRYPOINT ["gunicorn", "-w", "4", "-b", "0.0.0.0:8080", "-t", "600","conversation_agent.app:app"]
 
 EXPOSE 5000
