@@ -15,10 +15,12 @@ api.register_blueprint(MessageBlueprint)
 
 
 def main():
-    debug = False
-    if environment == environment:
-        debug = True
-    app.run(host="0.0.0.0", debug=debug, port=port)
+    if environment == "production":
+        app.run(host="0.0.0.0", port=port)
+    elif environment == "development":
+        app.run(host="0.0.0.0", debug=True, port=port)
+    else:
+        raise ValueError("Invalid environment")
 
 
 if __name__ == "__main__":

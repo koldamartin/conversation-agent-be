@@ -1,12 +1,11 @@
 version: '3.8'
 
 services:
-  conversation_agent_prod:
+  conversation_agent_dev:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "${PORT}:${PORT}"
-      #- "8080:8080"
     env_file:
       - .env
