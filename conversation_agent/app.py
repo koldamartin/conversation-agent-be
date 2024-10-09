@@ -1,20 +1,42 @@
-from flask import Flask, request, Response
+from flask import Flask, session
 from flask_smorest import Api
+import uuid
+import logging
 
-from conversation_agent.config.config import environment, port
-from conversation_agent.api.chat_route import blp as MessageBlueprint
+from config.config import environment, port, db_name, db_user, db_pass
+from api.chat_route import blp as MessageBlueprint
+from conversation_agent.db import db # Is this correct<
 
-app = Flask(__name__)
-app.config["API_TITLE"] = "Message API"
-app.config["API_VERSION"] = "v1"
-app.config["OPENAPI_VERSION"] = "3.0.2"
-app.config["MAX_CONTENT_LENGTH"] = 6 * 1024  # 6 kB
-
-api = Api(app)
-api.register_blueprint(MessageBlueprint)
+logging.basicConfig(level=logging.INFO)
 
 
 def main():
+    app = Flask(__name__)
+    app.secret_key = "your_secret_key"  # Required for session management
+    app.config["API_TITLE"] = "Message API"
+    app.config["API_VERSION"] = "v1"
+    app.config["OPENAPI_VERSION"] = "3.0.2"
+    app.config["MAX_CONTENT_LENGTH"] = 6 * 1024  # 6 kB
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@db:5432/{db_name}"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.init_app(app)
+    api = Api(app)
+    api.register_blueprint(MessageBlueprint)
+
+    @app.before_request
+    def create_user_id():
+
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())  # Generates a unique UUID
+
+        logging.info(f"User ID: {session['user_id']}")
+
+    with app.app_context():
+        db.create_all()
+        # if 'user_id' not in session:
+        #     session['user_id'] = str(uuid.uuid4())  # Generates a unique UUID
+
     if environment == "production":
         app.run(host="0.0.0.0", port=port)
     elif environment == "development":
