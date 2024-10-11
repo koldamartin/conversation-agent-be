@@ -38,6 +38,7 @@ COPY conversation_agent ./conversation_agent
 RUN pip install --no-cache-dir gunicorn
 
 # Run the application based on the environment
-CMD if [ "$ENVIRONMENT" = "production" ]; then gunicorn -w 4 -b 0.0.0.0:8080 -t 300 conversation_agent.app:app;else python conversation_agent/app.py run --host=0.0.0.0 --port=5000 --env-file=.env; fi
+#CMD if [ "$ENVIRONMENT" = "production" ]; then gunicorn -w 4 -b 0.0.0.0:8080 -t 300 conversation_agent.app:main;else python conversation_agent/app.py run --host=0.0.0.0 --port=5000 --env-file=.env; fi
+CMD if [ "$ENVIRONMENT" = "production" ]; then gunicorn -w 4 -b 0.0.0.0:8080 -t 300 conversation_agent.app:app;else python -m conversation_agent.app run --host=0.0.0.0 --port=5000 --env-file=.env; fi
 
 EXPOSE ${PORT}

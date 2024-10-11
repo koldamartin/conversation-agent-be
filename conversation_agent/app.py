@@ -2,17 +2,18 @@ from flask import Flask, session
 from flask_smorest import Api
 import uuid
 import logging
+import os
 
-from config.config import environment, port, db_name, db_user, db_pass
-from api.chat_route import blp as MessageBlueprint
-from conversation_agent.db import db # Is this correct<
+from .config.config import environment, port, db_name, db_user, db_pass, app_secret_key
+from .api.chat_route import blp as MessageBlueprint
+from .db import db # Is this correct<
 
 logging.basicConfig(level=logging.INFO)
 
 
-def main():
+def create_app():
     app = Flask(__name__)
-    app.secret_key = "your_secret_key"  # Required for session management
+    app.secret_key = app_secret_key  # Required for session management
     app.config["API_TITLE"] = "Message API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.2"
@@ -25,18 +26,21 @@ def main():
     api.register_blueprint(MessageBlueprint)
 
     @app.before_request
-    def create_user_id():
-
-        if 'user_id' not in session:
-            session['user_id'] = str(uuid.uuid4())  # Generates a unique UUID
-
-        logging.info(f"User ID: {session['user_id']}")
+    def initialize_session_id():
+        # Set the session_id from the environment variable
+        if 'SESSION_ID' not in session:
+            session['SESSION_ID'] = str(uuid.uuid4())
 
     with app.app_context():
         db.create_all()
-        # if 'user_id' not in session:
-        #     session['user_id'] = str(uuid.uuid4())  # Generates a unique UUID
 
+    return app
+
+
+app = create_app()
+
+
+def main():
     if environment == "production":
         app.run(host="0.0.0.0", port=port)
     elif environment == "development":

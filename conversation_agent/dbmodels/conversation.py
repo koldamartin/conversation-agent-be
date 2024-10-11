@@ -6,6 +6,6 @@ class ConversationModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(50), nullable=False)
-    # timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-    # query = db.Column(db.String, nullable=False)
-    # answer = db.Column(db.String, nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    query = db.Column(db.String, nullable=False)
+    answer = db.Column(db.String, nullable=False)
