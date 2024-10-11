@@ -10,6 +10,7 @@ llm_model = os.getenv("LLM")
 db_name = os.getenv("POSTGRES_NAME")
 db_pass = os.getenv("POSTGRES_PASSWORD")
 db_user = os.getenv("POSTGRES_USER")
+external_host = os.getenv("EXTERNAL_HOST")
 app_secret_key = os.getenv("APP_SECRET_KEY")
 
 if not environment:

@@ -3,7 +3,7 @@ from flask_smorest import Api
 import uuid
 import logging
 
-from .config.config import environment, port, db_name, db_user, db_pass, app_secret_key
+from .config.config import environment, port, db_name, db_user, db_pass, app_secret_key, external_host
 from .api.chat_route import blp as MessageBlueprint
 from .db import db
 
@@ -17,7 +17,10 @@ def create_app():
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.2"
     app.config["MAX_CONTENT_LENGTH"] = 6 * 1024  # 6 kB
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@db:5432/{db_name}"
+    if environment == "development":
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@db:5432/{db_name}"
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@{external_host}:5432/{db_name}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_PERMANENT"] = False
 
