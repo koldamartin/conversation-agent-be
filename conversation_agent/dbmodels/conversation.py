@@ -9,3 +9,4 @@ class ConversationModel(db.Model):
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
     query = db.Column(db.String, nullable=False)
     answer = db.Column(db.String, nullable=False)
+    end_flow = db.Column(db.String, nullable=False)

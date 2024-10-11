@@ -1,16 +1,16 @@
 [
   {
     "id": 0,
-    "name": "I_am_fine",
+    "name": "How_are_you",
     "description": "You are asked: How are you?",
-    "response": "I am fine. Thank you.",
+    "response": "Mám se dobře, děkuju",
     "end_flow": "Yes"
   },
   {
     "id": 1,
     "name": "Dirty_talk",
     "description": "You are insulted or the user talks dirty.",
-    "response": "Do not talk to me like that. Show some respect!",
+    "response": "No dovolte, takto na mě už nikdy nemluvte.",
     "end_flow": "Yes"
   },
   {
@@ -99,6 +99,13 @@
   },
   {
     "id": 14,
+    "name": "Greetings",
+    "description": "You are greeted by the user",
+    "response": "Zdravím vás, jak vám mohu pomoci?",
+    "end_flow": "Yes"
+  },
+  {
+    "id": 15,
     "name": "Default_tool",
     "description": "Use this tool when no other tool can be used.",
     "response": "Teď jsem vám nerozumněla, zkuste se mě zeptat jinak.",

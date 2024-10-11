@@ -1,17 +1,15 @@
 import os
-
 from flask_smorest import Blueprint, abort
 from flask import session
 from flask.views import MethodView
 from werkzeug.exceptions import BadRequest, RequestEntityTooLarge
 import logging
-import uuid
+from sqlalchemy import desc
 
 from conversation_agent.schemas.chat_schema import MessageSchema, MessageResponseSchema
 from conversation_agent.services.conversation_service import generate_response
 from conversation_agent.dbmodels.conversation import ConversationModel
 from conversation_agent.db import db
-
 
 
 blp = Blueprint("chat_route", __name__, url_prefix="/api/chat")
@@ -23,26 +21,32 @@ class ChatRoute(MethodView):
     @blp.response(200, MessageResponseSchema)
     def put(self, json_body):
         try:
-            result = generate_response(json_body["query"])
-            # Step 1: Load chat history from the database for the user_id
-            #user_id = os.getenv("SESSION_ID")
-            user_id = session.get("SESSION_ID")
-            #chat_history_records = db.session.query(ConversationModel).filter_by(user_id=user_id).all()
+            # Get the user id from the session
+            current_user_id = session.get("session_id")
 
-            # Step 3: Extract the answer from the result
-            answer = result
-            #chat_history = [{"query": record.query, "answer": record.answer} for record in chat_history_records]
+            # Get the latest chat history for the same session
+            recent_query = db.session.query(ConversationModel) \
+                .filter(ConversationModel.user_id == current_user_id) \
+                .order_by(desc(ConversationModel.timestamp)) \
+                .first()
+            if recent_query:
+                chat_history = [recent_query.query, recent_query.answer]
+                # If it is dialog end, clear the chat history
+                if recent_query.end_flow == 'Yes':
+                    chat_history.clear()
+            else:
+                chat_history = []
 
-            # Step 4: Store the query and answer in the database
-            new_entry = ConversationModel(user_id=user_id,
+            # Generate the response
+            result = generate_response(json_body["query"], chat_history)
+            # Add new entry to db
+            new_entry = ConversationModel(user_id=current_user_id,
                                           query=json_body["query"],
-                                          answer=answer)
-            logging.info(f"New entry created: {new_entry}")
+                                          answer=result[0],
+                                          end_flow=result[1])
             db.session.add(new_entry)
-            logging.info(f"New entry added to db: {new_entry}")
             db.session.commit()
-            logging.info(f"Data saved to db: user_id={user_id}")
-            return {"result": result}
+            return {"result": result[0]}
 
         except KeyError as e:
             abort(400, message=f"Missing required key: {json_body}. Details: {e}")

@@ -4,9 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from conversation_agent.tools.tool_loader import get_tools
 from conversation_agent.services.llm_service import llm
 
-chat_history = []
-tools = get_tools(chat_history)
-
+tools = get_tools()
 
 system_prompt = """
 As an AI assistant, it is your job to provide a response to the user's query, utilizing only the tools provided {tools}. 
@@ -28,17 +26,7 @@ agent = create_openai_functions_agent(llm, tools, prompt)
 final_agent = AgentExecutor(agent=agent, tools=tools, verbose=False, handle_parsing_errors=True, max_iterations=3)
 
 
-# def generate_response(history, query):
-def generate_response(query: str) -> str:
+def generate_response(query: str, chat_history: list) -> tuple:
+
     result = final_agent.invoke({'input': query, 'tools': tools, 'chat_history': chat_history})
-    print(result)
     return result['output']
-
-
-# while True:
-#     user_query = input("User: ")
-#     response = final_agent.invoke({'input': user_query, 'tools': tools, 'chat_history': chat_history})
-#     print(f"AI: {response['output']}")
-#     if user_query == "exit":
-#         print("Exiting...")
-#         break
