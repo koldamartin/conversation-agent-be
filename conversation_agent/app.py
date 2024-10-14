@@ -2,6 +2,7 @@ from flask import Flask, session
 from flask_smorest import Api
 import uuid
 import logging
+from flask_cors import CORS
 
 from .config.config import environment, port, db_name, db_user, db_pass, app_secret_key, external_host
 from .api.chat_route import blp as MessageBlueprint
@@ -16,6 +17,9 @@ def create_app():
     app.config["API_TITLE"] = "Message API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.2"
+    app.config["OPENAPI_URL_PREFIX"] = "/"
+    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://unpkg.com/swagger-ui-dist/"
     app.config["MAX_CONTENT_LENGTH"] = 6 * 1024  # 6 kB
     if environment == "development":
         app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@db:5432/{db_name}"
@@ -24,6 +28,8 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_PERMANENT"] = False
 
+    # Configure CORS
+    CORS(app)
     db.init_app(app)
     api = Api(app)
     api.register_blueprint(MessageBlueprint)
@@ -54,11 +60,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# TODO 1 - convert tools.xlsx to dialog_flow.json or tools.yaml -> Done
-# TODO 2 - add saving data into sql database
-# TODO 3 - add loading chat history from the same database
-# TODO 4 - add buttons to each answer, will be part of the json output along with the response
-# TODO 5 - divide files to correct directories -> Done
-# TODO 6 - use flask smorest for exceptions, blueprints etc. -> Done
-

@@ -16,6 +16,7 @@ python-dotenv = "^1.0.1"
 flask-sqlalchemy = "^3.1.1"
 psycopg2-binary = "^2.9.9"
 flask-session = "^0.8.0"
+flask-cors = "^5.0.0"
 
 
 [build-system]
