@@ -1,5 +1,5 @@
 # Conversation Agent
-![Alt text](readme_image.jpg?raw=true "Title")
+![Alt text](readme_image.jpeg?raw=true "Title")
 ## ABOUT
 - Create a conversation chatbot with predefined answers easily, just change the `conversation_flow.json` file.
 - Custom alternative to IBM Watson assistant or RASA library with minimal learning curve.
