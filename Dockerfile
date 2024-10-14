@@ -15,6 +15,8 @@ WORKDIR /app
 # Copy only necessary files for dependency installation
 COPY pyproject.toml poetry.lock ./
 
+RUN pip install --no-cache-dir flask-sqlalchemy
+
 # Install dependencies and remove cache in the same layer
 RUN poetry install --no-dev --no-interaction --no-ansi \
     && rm -rf $POETRY_CACHE_DIR
@@ -32,8 +34,13 @@ COPY --from=builder /app/.venv /app/.venv
 
 # Copy only necessary files for the application
 COPY conversation_agent ./conversation_agent
-COPY .env .
 
-CMD ["python", "conversation_agent/app.py", "run", "--host=0.0.0.0", "--port=5000", "--env-file=.env"]
+RUN pip install --no-cache-dir gunicorn
 
-EXPOSE 5000
+# Run the application based on the environment
+CMD if [ "$ENVIRONMENT" = "production" ]; then \
+    gunicorn -w 4 -b 0.0.0.0:${PORT} -t 300 conversation_agent.app:app; \
+else python -m conversation_agent.app run --host=0.0.0.0 --port=5000 --env-file=.env; \
+    fi
+
+EXPOSE ${PORT}
